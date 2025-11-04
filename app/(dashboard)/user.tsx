@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { auth, signOut } from '@/lib/auth';
+import { auth } from '@/lib/auth';
 import Image from 'next/image';
 import {
   DropdownMenu,
@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
+import { SignOutMenuItem } from './SignOutMenuItem';
 
 export async function User() {
   let session = await auth();
@@ -32,24 +33,20 @@ export async function User() {
           />
         </Button>
       </DropdownMenuTrigger>
+      {/* @ts-expect-error - client dropdown in server file */}
       <DropdownMenuContent align="end">
+        {/* @ts-expect-error - client dropdown in server file */}
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {/* @ts-expect-error - client dropdown in server file */}
         <DropdownMenuItem>Settings</DropdownMenuItem>
+        {/* @ts-expect-error - client dropdown in server file */}
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
         {user ? (
-          <DropdownMenuItem>
-            <form
-              action={async () => {
-                'use server';
-                await signOut({ redirectTo: '/login?signout=1' });
-              }}
-            >
-              <button type="submit">Sign Out</button>
-            </form>
-          </DropdownMenuItem>
+          <SignOutMenuItem />
         ) : (
+          // @ts-expect-error - client dropdown in server file
           <DropdownMenuItem>
             <Link href="/login">Sign In</Link>
           </DropdownMenuItem>
