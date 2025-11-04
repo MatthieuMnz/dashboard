@@ -17,15 +17,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       authorize: async (raw) => {
-        console.log('Authorize called with:', { 
-          hasEmail: !!raw?.email, 
-          hasPassword: !!raw?.password,
-          email: raw?.email 
-        });
-        
         const parsed = credentialsSchema.safeParse(raw);
         if (!parsed.success) {
-          console.error('Credentials schema validation failed:', parsed.error);
           return null;
         }
         const { email, password } = parsed.data;
@@ -41,25 +34,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .from(users)
           .where(eq(users.email, email))
           .limit(1);
-        
+
         if (!user) {
-          console.error(`User not found: ${email}`);
           return null;
         }
-        
+
         if (!user.passwordHash) {
-          console.error(`User ${email} has no password hash`);
           return null;
         }
 
         try {
           const ok = await argon2.verify(user.passwordHash, password);
           if (!ok) {
-            console.error(`Password verification failed for user ${email}`);
             return null;
           }
         } catch (error) {
-          console.error(`Error verifying password for user ${email}:`, error);
           return null;
         }
 

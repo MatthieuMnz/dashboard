@@ -225,6 +225,20 @@ Notes:
   - Extract repeated patterns into reusable components/variants (CVA) instead of copy‑pasting classes.
 - Accessibility: prefer Radix components, ensure keyboard support and proper ARIA.
 
+## Internationalization & Localization
+
+- **French-only interface**: All user-facing text in the frontend MUST be in French. This includes:
+  - Page titles, headings, descriptions
+  - Button labels, form labels, placeholders
+  - Toast messages, error messages, success messages
+  - Tooltips, dialog titles, descriptions
+  - Navigation labels, breadcrumbs
+  - Table headers, status messages
+  - Any text visible to end users
+- **Codebase remains in English**: Variable names, function names, file names, comments, and internal code MUST remain in English. Only translate user-facing strings.
+- **Consistency**: Use consistent French terminology across the application. Maintain a glossary of common terms if needed.
+- **Error messages**: Server-side error messages returned to the UI must be in French.
+
 ## Error Handling
 
 - UI: use error boundaries (`error.tsx`) under concept folders for domain‑specific errors.

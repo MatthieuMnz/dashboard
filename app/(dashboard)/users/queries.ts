@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { db, users, type SelectUser } from '@/lib/db';
+import { USER_LIST_LIMIT } from '@/lib/constants';
 import { asc, count, eq } from 'drizzle-orm';
 
 export type ListUsersResult = {
@@ -10,13 +11,13 @@ export type ListUsersResult = {
 
 export async function listUsers(): Promise<ListUsersResult> {
   const [rows, total] = await Promise.all([
-    db.select().from(users).orderBy(asc(users.id)).limit(1000),
-    db.select({ count: count() }).from(users)
+    db.select().from(users).orderBy(asc(users.id)).limit(USER_LIST_LIMIT),
+    db.select({ total: count(users.id) }).from(users)
   ]);
 
   return {
     users: rows,
-    totalUsers: total[0]?.count ?? 0
+    totalUsers: Number(total[0]?.total ?? 0)
   };
 }
 

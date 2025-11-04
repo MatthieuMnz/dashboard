@@ -1,7 +1,11 @@
 'use server';
 
 import argon2 from 'argon2';
-import { createUserSchema, type CreateUserInput } from './schemas';
+import {
+  createUserSchema,
+  updateUserSchema,
+  type CreateUserInput
+} from './schemas';
 import {
   findUserByEmail,
   insertUser,
@@ -39,7 +43,7 @@ export async function createUser(input: CreateUserInput) {
 
   const existing = await findUserByEmail(email);
   if (existing) {
-    throw new Error('A user with this email already exists.');
+    throw new Error('Un utilisateur avec cet email existe déjà.');
   }
 
   const plaintextPassword = generatePassword(16);
@@ -70,18 +74,19 @@ export async function updateUserAction(
   id: number,
   input: { email?: string; name?: string; username?: string }
 ) {
-  const safeEmail = input.email?.trim();
+  const parsed = updateUserSchema.parse(input);
+  const safeEmail = parsed.email?.trim();
   if (safeEmail) {
     const existing = await findUserByEmail(safeEmail);
     if (existing && existing.id !== id) {
-      throw new Error('A user with this email already exists.');
+      throw new Error('Un utilisateur avec cet email existe déjà.');
     }
   }
 
   const updated = await updateUserById(id, {
     email: safeEmail,
-    name: input.name ?? null,
-    username: input.username ?? null
+    name: parsed.name ?? null,
+    username: parsed.username ?? null
   });
 
   revalidatePath('/users');

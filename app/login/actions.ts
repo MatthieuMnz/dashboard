@@ -23,7 +23,10 @@ export async function loginAction(
 
   const parsed = credentialsSchema.safeParse({ email, password });
   if (!parsed.success) {
-    return { success: false, error: 'Please enter a valid email and password.' };
+    return {
+      success: false,
+      error: 'Veuillez entrer un email et un mot de passe valides.'
+    };
   }
 
   try {
@@ -37,15 +40,16 @@ export async function loginAction(
   } catch (error) {
     // AuthError is thrown when credentials are invalid
     if (error instanceof AuthError) {
-      return { success: false, error: 'Invalid email or password.' };
+      return { success: false, error: 'Email ou mot de passe incorrect.' };
     }
     // Re-throw redirect errors (Next.js redirects throw errors)
     if (error && typeof error === 'object' && 'digest' in error) {
       throw error;
     }
     console.error('Login error:', error);
-    return { success: false, error: 'An unexpected error occurred. Please try again.' };
+    return {
+      success: false,
+      error: "Une erreur inattendue s'est produite. Veuillez réessayer."
+    };
   }
 }
-
-

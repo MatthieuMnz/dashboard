@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Eye, EyeOff, RefreshCw, Copy as CopyIcon, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
 type Props = {
   password: string;
@@ -24,37 +25,21 @@ export function PasswordDisplay({
   showCopy = true
 }: Props) {
   const [revealed, setRevealed] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
+  const { copied, copy } = useCopyToClipboard({ resetAfterMs: 2000 });
 
   async function handleCopy() {
     try {
-      await navigator.clipboard.writeText(password);
-      setCopied(true);
+      await copy(password);
 
-      toast.success('Password copied to clipboard', {
-        description: 'The password has been copied. Store it securely.',
+      toast.success('Mot de passe copié dans le presse-papiers', {
+        description:
+          'Le mot de passe a été copié. Stockez-le de manière sécurisée.',
         duration: 2000
       });
-
-      // Reset copied state after a delay
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = setTimeout(() => {
-        setCopied(false);
-      }, 2000);
     } catch (err) {
-      toast.error('Failed to copy password', {
-        description: 'Unable to copy to clipboard. Please try again.',
+      toast.error('Échec de la copie du mot de passe', {
+        description:
+          'Impossible de copier dans le presse-papiers. Veuillez réessayer.',
         duration: 2000
       });
     }
@@ -84,7 +69,8 @@ export function PasswordDisplay({
             )}
           </Button>
         </TooltipTrigger>
-        <TooltipContent>{revealed ? 'Hide' : 'Show'}</TooltipContent>
+        {/* @ts-expect-error - type inference issue with TooltipContent */}
+        <TooltipContent>{revealed ? 'Masquer' : 'Afficher'}</TooltipContent>
       </Tooltip>
       {onRegenerate && (
         <Tooltip>
@@ -101,7 +87,8 @@ export function PasswordDisplay({
               />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Regenerate</TooltipContent>
+          {/* @ts-expect-error - type inference issue with TooltipContent */}
+          <TooltipContent>Régénérer</TooltipContent>
         </Tooltip>
       )}
       {showCopy && (
@@ -125,8 +112,9 @@ export function PasswordDisplay({
               )}
             </Button>
           </TooltipTrigger>
+          {/* @ts-expect-error - type inference issue with TooltipContent */}
           <TooltipContent>
-            {copied ? 'Copied!' : 'Copy password'}
+            {copied ? 'Copié !' : 'Copier le mot de passe'}
           </TooltipContent>
         </Tooltip>
       )}

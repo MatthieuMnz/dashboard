@@ -19,8 +19,10 @@ export default async function LoginPage() {
     <div className="min-h-screen flex justify-center items-start md:items-center p-8">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Sign in</CardTitle>
-          <CardDescription>Use your admin email and password.</CardDescription>
+          <CardTitle className="text-2xl">Se connecter</CardTitle>
+          <CardDescription>
+            Utilisez votre email et mot de passe d'administration.
+          </CardDescription>
         </CardHeader>
         <CardFooter>
           <LoginForm />

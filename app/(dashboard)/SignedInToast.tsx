@@ -11,7 +11,7 @@ export function SignedInToast() {
 
   useEffect(() => {
     if (params?.get('signedin') === '1') {
-      toast.success('Welcome back!');
+      toast.success('Bon retour !');
       // Clean the query param to avoid repeated toasts on navigation
       const next = new URLSearchParams(params.toString());
       next.delete('signedin');
@@ -22,5 +22,3 @@ export function SignedInToast() {
 
   return null;
 }
-
-

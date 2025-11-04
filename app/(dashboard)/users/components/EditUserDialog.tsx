@@ -16,16 +16,32 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
 import { updateUserAction, resetUserPasswordAction } from '../actions';
 import { createUserSchema } from '../schemas';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import { PasswordDisplay } from './PasswordDisplay';
 import { Pencil } from 'lucide-react';
 
 type Props = {
-  user: { id: number; email: string; name: string | null; username: string | null };
+  user: {
+    id: number;
+    email: string;
+    name: string | null;
+    username: string | null;
+  };
 };
 
 type EditInput = {
@@ -38,7 +54,9 @@ export function EditUserDialog({ user }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [showPasswordSection, setShowPasswordSection] = useState(false);
-  const [generatedPassword, setGeneratedPassword] = useState<string | null>(null);
+  const [generatedPassword, setGeneratedPassword] = useState<string | null>(
+    null
+  );
   const [passwordLoading, setPasswordLoading] = useState(false);
 
   const form = useForm<EditInput>({
@@ -86,13 +104,16 @@ export function EditUserDialog({ user }: Props) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => {
-      if (!isOpen) {
-        handleClose();
-      } else {
-        setOpen(true);
-      }
-    }}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          handleClose();
+        } else {
+          setOpen(true);
+        }
+      }}
+    >
       <Tooltip>
         <TooltipTrigger asChild>
           <DialogTrigger asChild>
@@ -101,12 +122,14 @@ export function EditUserDialog({ user }: Props) {
             </Button>
           </DialogTrigger>
         </TooltipTrigger>
-        <TooltipContent>Edit</TooltipContent>
+        <TooltipContent>Modifier</TooltipContent>
       </Tooltip>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit user</DialogTitle>
-          <DialogDescription>Update the user details and password.</DialogDescription>
+          <DialogTitle>Modifier l'utilisateur</DialogTitle>
+          <DialogDescription>
+            Mettez à jour les détails de l'utilisateur et le mot de passe.
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
@@ -128,7 +151,7 @@ export function EditUserDialog({ user }: Props) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Nom</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -141,7 +164,7 @@ export function EditUserDialog({ user }: Props) {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Nom d'utilisateur</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -153,8 +176,10 @@ export function EditUserDialog({ user }: Props) {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-sm font-medium">Password</h4>
-                  <p className="text-sm text-muted-foreground">Reset the user's password</p>
+                  <h4 className="text-sm font-medium">Mot de passe</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Réinitialiser le mot de passe de l'utilisateur
+                  </p>
                 </div>
                 {!showPasswordSection && (
                   <Button
@@ -163,13 +188,18 @@ export function EditUserDialog({ user }: Props) {
                     onClick={handleGeneratePassword}
                     disabled={passwordLoading}
                   >
-                    {passwordLoading ? 'Generating…' : 'Generate new password'}
+                    {passwordLoading
+                      ? 'Génération…'
+                      : 'Générer un nouveau mot de passe'}
                   </Button>
                 )}
               </div>
               {showPasswordSection && generatedPassword && (
                 <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">This password is shown only once. Please store it securely.</p>
+                  <p className="text-sm text-muted-foreground">
+                    Ce mot de passe n'est affiché qu'une seule fois. Veuillez le
+                    stocker de manière sécurisée.
+                  </p>
                   <PasswordDisplay
                     password={generatedPassword}
                     onRegenerate={handleRegeneratePassword}
@@ -180,10 +210,12 @@ export function EditUserDialog({ user }: Props) {
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={handleClose}>
-                Cancel
+                Annuler
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Saving…' : 'Save changes'}
+                {form.formState.isSubmitting
+                  ? 'Enregistrement…'
+                  : 'Enregistrer les modifications'}
               </Button>
             </DialogFooter>
           </form>
@@ -192,5 +224,3 @@ export function EditUserDialog({ user }: Props) {
     </Dialog>
   );
 }
-
-

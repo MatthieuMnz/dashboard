@@ -15,7 +15,11 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { deleteUserAction } from '../actions';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import { Trash2 } from 'lucide-react';
 
 type Props = { id: number; disabled?: boolean };
@@ -46,24 +50,22 @@ export function DeleteUserButton({ id, disabled }: Props) {
             </Button>
           </AlertDialogTrigger>
         </TooltipTrigger>
-        <TooltipContent>Delete</TooltipContent>
+        <TooltipContent>Supprimer</TooltipContent>
       </Tooltip>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete this user?</AlertDialogTitle>
+          <AlertDialogTitle>Supprimer cet utilisateur ?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone.
+            Cette action ne peut pas être annulée.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Annuler</AlertDialogCancel>
           <AlertDialogAction onClick={onDelete} disabled={loading}>
-            {loading ? 'Deleting…' : 'Delete'}
+            {loading ? 'Suppression…' : 'Supprimer'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
 }
-
-

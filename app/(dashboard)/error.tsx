@@ -1,6 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
+import { AlertTriangle } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function Error({
   error,
@@ -15,32 +24,34 @@ export default function Error({
   }, [error]);
 
   return (
-    <main className="p-4 md:p-6">
-      <div className="mb-8 space-y-4">
-        <h1 className="font-semibold text-lg md:text-2xl">
-          Please complete setup
-        </h1>
-        <p>
-          Inside the Vercel Postgres dashboard, create a table based on the
-          schema defined in this repository.
-        </p>
-        <pre className="my-4 px-3 py-4 bg-black text-white rounded-lg max-w-2xl overflow-scroll flex text-wrap">
-          <code>
-            {`CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  email VARCHAR(255) NOT NULL,
-  name VARCHAR(255),
-  username VARCHAR(255)
-);`}
-          </code>
-        </pre>
-        <p>Insert a row for testing:</p>
-        <pre className="my-4 px-3 py-4 bg-black text-white rounded-lg max-w-2xl overflow-scroll flex text-wrap">
-          <code>
-            {`INSERT INTO users (id, email, name, username) VALUES (1, 'me@site.com', 'Me', 'username');`}
-          </code>
-        </pre>
-      </div>
-    </main>
+    <div className="space-y-4">
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            <CardTitle>Une erreur est survenue</CardTitle>
+          </div>
+          <CardDescription>
+            Une erreur s'est produite lors du chargement de cette page.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Veuillez réessayer. Si le problème persiste, contactez le support
+            technique.
+          </p>
+          {error.digest && (
+            <p className="text-xs text-muted-foreground font-mono">
+              Code d'erreur : {error.digest}
+            </p>
+          )}
+          <div className="flex gap-2">
+            <Button onClick={reset} variant="default">
+              Réessayer
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

@@ -1,6 +1,19 @@
 import { listUsers } from './queries';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
 import { CreateUserDialog } from './components/CreateUserDialog';
 import { EditUserDialog } from './components/EditUserDialog';
 import { DeleteUserButton } from './components/DeleteUserButton';
@@ -13,8 +26,10 @@ export default async function UsersPage() {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-4">
         <div>
-          <CardTitle>Users</CardTitle>
-          <CardDescription>Manage users and create new accounts.</CardDescription>
+          <CardTitle>Utilisateurs</CardTitle>
+          <CardDescription>
+            Gérer les utilisateurs et créer de nouveaux comptes.
+          </CardDescription>
         </div>
         <CreateUserDialog />
       </CardHeader>
@@ -24,9 +39,9 @@ export default async function UsersPage() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[80px]">ID</TableHead>
-                <TableHead>Name</TableHead>
+                <TableHead>Nom</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Username</TableHead>
+                <TableHead>Nom d'utilisateur</TableHead>
                 <TableHead className="w-[180px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -34,11 +49,11 @@ export default async function UsersPage() {
               {users.map((u) => (
                 <TableRow key={u.id}>
                   <TableCell>
-                    <Copyable value={String(u.id)} label="User ID" />
+                    <Copyable value={String(u.id)} label="ID utilisateur" />
                   </TableCell>
                   <TableCell>
                     {u.name ? (
-                      <Copyable value={u.name} label="Name" />
+                      <Copyable value={u.name} label="Nom" />
                     ) : (
                       <span className="text-muted-foreground">-</span>
                     )}
@@ -48,7 +63,7 @@ export default async function UsersPage() {
                   </TableCell>
                   <TableCell>
                     {u.username ? (
-                      <Copyable value={u.username} label="Username" />
+                      <Copyable value={u.username} label="Nom d'utilisateur" />
                     ) : (
                       <span className="text-muted-foreground">-</span>
                     )}
@@ -75,5 +90,3 @@ export default async function UsersPage() {
     </Card>
   );
 }
-
-

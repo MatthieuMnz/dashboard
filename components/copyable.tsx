@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Copy, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
 type CopyableProps = {
   /** The text content to copy */
@@ -60,45 +61,29 @@ export function Copyable({
   maxLength = 50,
   ...props
 }: CopyableProps) {
-  const [copied, setCopied] = React.useState(false);
   const [isHovered, setIsHovered] = React.useState(false);
-  const timeoutRef = React.useRef<NodeJS.Timeout>();
+  const { copied, copy } = useCopyToClipboard({ resetAfterMs: 2000 });
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
 
     try {
-      await navigator.clipboard.writeText(value);
-      setCopied(true);
+      await copy(value);
 
-      toast.success('Copied to clipboard', {
-        description: label ? `${label} copied` : 'Text copied to clipboard',
+      toast.success('Copié dans le presse-papiers', {
+        description: label
+          ? `${label} copié`
+          : 'Texte copié dans le presse-papiers',
         duration: 2000
       });
-
-      // Reset copied state after a delay
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = setTimeout(() => {
-        setCopied(false);
-      }, 2000);
     } catch (err) {
-      toast.error('Failed to copy', {
-        description: 'Unable to copy to clipboard',
+      toast.error('Échec de la copie', {
+        description: 'Impossible de copier dans le presse-papiers',
         duration: 2000
       });
     }
   };
-
-  React.useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
 
   const displayValue =
     truncate && value.length > maxLength
@@ -142,8 +127,8 @@ export function Copyable({
         type="button"
         onClick={handleCopy}
         className={buttonBaseClasses}
-        aria-label={`Copy ${label || 'text'} to clipboard`}
-        title={`Copy ${label || 'text'}`}
+        aria-label={`Copier ${label || 'le texte'} dans le presse-papiers`}
+        title={`Copier ${label || 'le texte'}`}
       >
         {copied ? (
           <Check

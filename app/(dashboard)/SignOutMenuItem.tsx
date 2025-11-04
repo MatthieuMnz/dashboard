@@ -17,7 +17,7 @@ export function SignOutMenuItem() {
       }}
       disabled={isPending}
     >
-      {isPending ? 'Signing out…' : 'Sign Out'}
+      {isPending ? 'Déconnexion…' : 'Se déconnecter'}
     </DropdownMenuItem>
   );
 }

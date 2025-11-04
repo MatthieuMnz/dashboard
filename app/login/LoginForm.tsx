@@ -12,7 +12,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <Button className="w-full" type="submit" disabled={pending}>
-      {pending ? 'Signing in…' : 'Sign in'}
+      {pending ? 'Connexion en cours…' : 'Se connecter'}
     </Button>
   );
 }
@@ -34,7 +34,7 @@ export function LoginForm() {
 
   useEffect(() => {
     if (params?.get('signout') === '1') {
-      toast.success('Signed out successfully.');
+      toast.success('Déconnexion réussie.');
     }
   }, [params]);
 
@@ -59,7 +59,7 @@ export function LoginForm() {
         <Input
           type="email"
           name="email"
-          placeholder="user@example.com"
+          placeholder="utilisateur@exemple.com"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}

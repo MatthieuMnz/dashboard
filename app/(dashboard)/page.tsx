@@ -14,19 +14,21 @@ export default function DashboardPage() {
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Dashboard</CardTitle>
-          <CardDescription>Welcome to the admin platform</CardDescription>
+          <CardTitle>Tableau de bord</CardTitle>
+          <CardDescription>
+            Bienvenue sur la plateforme d'administration
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <p className="text-muted-foreground">
-              Select a section from the navigation to get started.
+              Sélectionnez une section dans la navigation pour commencer.
             </p>
             <div className="flex gap-4">
               <Button asChild variant="outline">
                 <Link href="/users">
                   <Users2 className="mr-2 h-4 w-4" />
-                  Manage Users
+                  Gérer les utilisateurs
                 </Link>
               </Button>
             </div>

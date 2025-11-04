@@ -18,8 +18,19 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import { PasswordDisplay } from './PasswordDisplay';
 import { Plus } from 'lucide-react';
 
@@ -30,7 +41,9 @@ type Props = {
 export function CreateUserDialog({ onCreated }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [generatedPassword, setGeneratedPassword] = useState<string | null>(null);
+  const [generatedPassword, setGeneratedPassword] = useState<string | null>(
+    null
+  );
   const [createdUserId, setCreatedUserId] = useState<number | null>(null);
   const [regenLoading, setRegenLoading] = useState(false);
 
@@ -58,7 +71,8 @@ export function CreateUserDialog({ onCreated }: Props) {
     if (!createdUserId) return;
     setRegenLoading(true);
     try {
-      const { plaintextPassword } = await resetUserPasswordAction(createdUserId);
+      const { plaintextPassword } =
+        await resetUserPasswordAction(createdUserId);
       setGeneratedPassword(plaintextPassword);
     } finally {
       setRegenLoading(false);
@@ -66,13 +80,16 @@ export function CreateUserDialog({ onCreated }: Props) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => {
-      if (!isOpen) {
-        handleClose();
-      } else {
-        setOpen(true);
-      }
-    }}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          handleClose();
+        } else {
+          setOpen(true);
+        }
+      }}
+    >
       <Tooltip>
         <TooltipTrigger asChild>
           <DialogTrigger asChild>
@@ -81,17 +98,23 @@ export function CreateUserDialog({ onCreated }: Props) {
             </Button>
           </DialogTrigger>
         </TooltipTrigger>
-        <TooltipContent>Create user</TooltipContent>
+        <TooltipContent>Créer un utilisateur</TooltipContent>
       </Tooltip>
       <DialogContent>
         {!generatedPassword ? (
           <>
             <DialogHeader>
-              <DialogTitle>Create user</DialogTitle>
-              <DialogDescription>Provide details. A secure password will be generated and shown once.</DialogDescription>
+              <DialogTitle>Créer un utilisateur</DialogTitle>
+              <DialogDescription>
+                Fournissez les détails. Un mot de passe sécurisé sera généré et
+                affiché une seule fois.
+              </DialogDescription>
             </DialogHeader>
             <Form {...form}>
-              <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+              <form
+                className="space-y-4"
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
                 <FormField
                   control={form.control}
                   name="email"
@@ -99,7 +122,11 @@ export function CreateUserDialog({ onCreated }: Props) {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="user@example.com" {...field} />
+                        <Input
+                          type="email"
+                          placeholder="utilisateur@exemple.com"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -110,9 +137,9 @@ export function CreateUserDialog({ onCreated }: Props) {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>Nom</FormLabel>
                       <FormControl>
-                        <Input placeholder="Full name" {...field} />
+                        <Input placeholder="Nom complet" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -123,9 +150,9 @@ export function CreateUserDialog({ onCreated }: Props) {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Username</FormLabel>
+                      <FormLabel>Nom d'utilisateur</FormLabel>
                       <FormControl>
-                        <Input placeholder="username" {...field} />
+                        <Input placeholder="nom_utilisateur" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -133,10 +160,10 @@ export function CreateUserDialog({ onCreated }: Props) {
                 />
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={handleClose}>
-                    Cancel
+                    Annuler
                   </Button>
                   <Button type="submit" disabled={form.formState.isSubmitting}>
-                    {form.formState.isSubmitting ? 'Creating…' : 'Create'}
+                    {form.formState.isSubmitting ? 'Création…' : 'Créer'}
                   </Button>
                 </DialogFooter>
               </form>
@@ -145,8 +172,11 @@ export function CreateUserDialog({ onCreated }: Props) {
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle>Copy the password now</DialogTitle>
-              <DialogDescription>This password is shown only once. Please store it securely.</DialogDescription>
+              <DialogTitle>Copiez le mot de passe maintenant</DialogTitle>
+              <DialogDescription>
+                Ce mot de passe n'est affiché qu'une seule fois. Veuillez le
+                stocker de manière sécurisée.
+              </DialogDescription>
             </DialogHeader>
             <PasswordDisplay
               password={generatedPassword}
@@ -155,7 +185,7 @@ export function CreateUserDialog({ onCreated }: Props) {
             />
             <DialogFooter>
               <Button type="button" onClick={handleClose}>
-                Done
+                Terminé
               </Button>
             </DialogFooter>
           </>
@@ -164,5 +194,3 @@ export function CreateUserDialog({ onCreated }: Props) {
     </Dialog>
   );
 }
-
-
