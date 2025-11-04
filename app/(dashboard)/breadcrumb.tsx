@@ -15,6 +15,7 @@ import {
 const routeLabels: Record<string, string> = {
   '': 'Tableau de bord',
   users: 'Utilisateurs',
+  partnership: 'Partenariats',
   orders: 'Commandes',
   analytics: 'Analyses'
 };

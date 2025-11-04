@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { PanelLeft, Package2, Home, Users2, LineChart } from 'lucide-react';
+import { PanelLeft, Package2, Home, Users2, Handshake } from 'lucide-react';
 
 export function MobileNav() {
   return (
@@ -36,6 +36,13 @@ export function MobileNav() {
           >
             <Users2 className="h-5 w-5" />
             Utilisateurs
+          </Link>
+          <Link
+            href="/partnership"
+            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+          >
+            <Handshake className="h-5 w-5" />
+            Partenariats
           </Link>
           {/* Settings placeholder removed for consistency */}
         </nav>

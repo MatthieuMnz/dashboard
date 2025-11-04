@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Home, Settings, Users2 } from 'lucide-react';
+import { Home, Settings, Users2, Handshake } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -27,6 +27,10 @@ export function DesktopNav() {
 
         <NavItem href="/users" label="Utilisateurs">
           <Users2 className="h-5 w-5" />
+        </NavItem>
+
+        <NavItem href="/partnership" label="Partenariats">
+          <Handshake className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
