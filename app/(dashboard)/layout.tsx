@@ -2,7 +2,6 @@ import Link from 'next/link';
 import {
   Home,
   LineChart,
-  Package,
   Package2,
   PanelLeft,
   Settings,
@@ -10,14 +9,6 @@ import {
   Users2
 } from 'lucide-react';
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
@@ -29,17 +20,27 @@ import { Analytics } from '@vercel/analytics/react';
 import { User } from './user';
 import { VercelLogo } from '@/components/icons';
 import Providers from './providers';
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 import { NavItem } from './nav-item';
 import { SearchInput } from './search';
+import { DynamicBreadcrumb } from './breadcrumb';
+import { SignedInToast } from './SignedInToast';
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+  if (!session?.user) {
+    redirect('/login');
+  }
   return (
     <Providers>
       <main className="flex min-h-screen w-full flex-col bg-muted/40">
+        {/* Client toast on successful sign-in */}
+        <SignedInToast />
         <DesktopNav />
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
@@ -74,20 +75,8 @@ function DesktopNav() {
           <Home className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Orders">
-          <ShoppingCart className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/" label="Products">
-          <Package className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/customers" label="Customers">
+        <NavItem href="/users" label="Users">
           <Users2 className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="#" label="Analytics">
-          <LineChart className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -101,6 +90,7 @@ function DesktopNav() {
               <span className="sr-only">Settings</span>
             </Link>
           </TooltipTrigger>
+          {/* @ts-expect-error - type inference issue when using client component in server file */}
           <TooltipContent side="right">Settings</TooltipContent>
         </Tooltip>
       </nav>
@@ -117,6 +107,7 @@ function MobileNav() {
           <span className="sr-only">Toggle Menu</span>
         </Button>
       </SheetTrigger>
+      {/* @ts-expect-error - type inference issue when using client component in server file */}
       <SheetContent side="left" className="sm:max-w-xs">
         <nav className="grid gap-6 text-lg font-medium">
           <Link
@@ -142,17 +133,17 @@ function MobileNav() {
           </Link>
           <Link
             href="#"
-            className="flex items-center gap-4 px-2.5 text-foreground"
-          >
-            <Package className="h-5 w-5" />
-            Products
-          </Link>
-          <Link
-            href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <Users2 className="h-5 w-5" />
             Customers
+          </Link>
+          <Link
+            href="/users"
+            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+          >
+            <Users2 className="h-5 w-5" />
+            Users
           </Link>
           <Link
             href="#"
@@ -168,25 +159,5 @@ function MobileNav() {
 }
 
 function DashboardBreadcrumb() {
-  return (
-    <Breadcrumb className="hidden md:flex">
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="#">Dashboard</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="#">Products</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage>All Products</BreadcrumbPage>
-        </BreadcrumbItem>
-      </BreadcrumbList>
-    </Breadcrumb>
-  );
+  return <DynamicBreadcrumb />;
 }

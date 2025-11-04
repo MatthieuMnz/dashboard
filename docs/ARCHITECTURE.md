@@ -81,6 +81,124 @@ Migrations:
 - Use `drizzle-kit` for schema migrations. Store migrations in `drizzle/` and run them as part of deploys.
 - Never mutate tables directly in production. Always create a migration.
 
+## Database Schema & Migrations (Drizzle)
+
+This project uses Drizzle ORM with `drizzle-kit` for schema management and SQL migrations.
+
+### Schema organization
+
+- Keep table/enums in TypeScript. Two acceptable patterns:
+  - Simple: define tables in `lib/db.ts` (current state).
+  - Preferred as the app grows: split into domain files in `lib/schema/<concept>.ts` and import those into `lib/db.ts`.
+
+Example preferred layout:
+
+```
+lib/
+  db.ts                 # drizzle client + imports of all tables
+  schema/
+    core.ts             # shared tables/enums
+    products.ts         # products domain tables
+    users.ts            # users domain tables
+```
+
+### Config file
+
+Create `drizzle.config.ts` at the repo root to tell `drizzle-kit` where schemas live and where to write migrations. Load envs for local dev.
+
+```ts
+// drizzle.config.ts
+import 'dotenv/config';
+import { defineConfig } from 'drizzle-kit';
+
+export default defineConfig({
+  dialect: 'postgresql',
+  out: './drizzle',
+  // If you split schemas, prefer './lib/schema/**/*.ts'
+  schema: ['./lib/db.ts'],
+  dbCredentials: {
+    url: process.env.POSTGRES_URL!
+  }
+});
+```
+
+### NPM scripts (suggested)
+
+Add the following scripts to `package.json` to standardize the workflow:
+
+```json
+{
+  "scripts": {
+    "drizzle:generate": "drizzle-kit generate",
+    "drizzle:studio": "drizzle-kit studio"
+  }
+}
+```
+
+For applying migrations, we recommend the programmatic migrator so the same code runs locally and in CI/CD:
+
+```ts
+// scripts/migrate.ts
+import 'dotenv/config';
+import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+
+async function main() {
+  const sql = postgres(process.env.POSTGRES_URL!, { max: 1 });
+  const db = drizzle(sql);
+  await migrate(db, { migrationsFolder: 'drizzle' });
+  await sql.end();
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
+```
+
+And the script entry:
+
+```json
+{
+  "scripts": {
+    "drizzle:migrate": "tsx scripts/migrate.ts"
+  }
+}
+```
+
+Use `tsx` or `ts-node` depending on your tooling.
+
+### Local development flow
+
+1. Edit your Drizzle schema in `lib/db.ts` or `lib/schema/**/*.ts`.
+2. Generate SQL migration files: `pnpm drizzle:generate`.
+   - Migrations are written to `drizzle/` as timestamped `.sql` files.
+3. Apply migrations to your local DB: `pnpm drizzle:migrate`.
+4. Seed data if needed (e.g., call `app/api/seed` route locally or create a dedicated seed script).
+
+Notes:
+
+- Never hand‑edit previously committed migration files. If you need to change the DB, create a new migration from the updated schema.
+- Review generated SQL before applying, especially for destructive operations.
+
+### CI/CD & production flow
+
+- On deploy, run migrations before starting the app process:
+  - Build artifacts
+  - Run `pnpm drizzle:migrate` against the production database
+  - Start the app
+- Backups: ensure automated DB backups are configured and healthy before running production migrations.
+- Rollbacks: Drizzle migrations are forward‑only. To revert, create a new migration that undoes the change (drop added columns, re‑add removed columns, etc.). Avoid out‑of-band manual changes.
+
+### Do/Don’t
+
+- Do: keep schema in TypeScript, generate SQL via `drizzle-kit`.
+- Do: keep migrations in VCS under `drizzle/`.
+- Do: run the same migrator code locally and in CI/CD.
+- Don’t: use `push`‑style schema sync against production; prefer migrations.
+- Don’t: mutate tables directly in production consoles.
+
 ## Server Actions & APIs
 
 - Prefer **server actions** colocated with pages/components when actions are page‑local. For shared actions within a concept, use `app/(dashboard)/<concept>/actions.ts`.
@@ -92,10 +210,12 @@ Migrations:
 
 ## AuthN & AuthZ
 
-- Use Auth.js v5 with a single sign‑in flow.
-- Gate all dashboard routes behind authentication in server components/layouts.
-- Introduce **roles/capabilities** early (e.g., `admin`, `editor`, `viewer`) and check in server actions and server components.
-- Never rely on client‑side role checks for security decisions.
+- Auth.js v5 (NextAuth) using the Credentials provider (email + password).
+- Passwords are hashed with Argon2id; verification happens in the Credentials `authorize` callback.
+- Sessions use JWT strategy; no server session store required.
+- Login route is `/login`. Unauthenticated users are redirected there by the dashboard `layout.tsx` using a server‑side `auth()` check.
+- No roles/capabilities for now: any authenticated user can access all dashboard areas.
+- Never rely on client‑side checks for security decisions; all gating is server‑side.
 
 ## UI & Styling
 

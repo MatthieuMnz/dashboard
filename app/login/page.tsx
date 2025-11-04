@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardDescription,
@@ -6,30 +5,25 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { signIn } from '@/lib/auth';
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import { LoginForm } from './LoginForm';
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await auth();
+  if (session?.user) {
+    redirect('/');
+  }
+
   return (
     <div className="min-h-screen flex justify-center items-start md:items-center p-8">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            This demo uses GitHub for authentication.
-          </CardDescription>
+          <CardTitle className="text-2xl">Sign in</CardTitle>
+          <CardDescription>Use your admin email and password.</CardDescription>
         </CardHeader>
         <CardFooter>
-          <form
-            action={async () => {
-              'use server';
-              await signIn('github', {
-                redirectTo: '/'
-              });
-            }}
-            className="w-full"
-          >
-            <Button className="w-full">Sign in with GitHub</Button>
-          </form>
+          <LoginForm />
         </CardFooter>
       </Card>
     </div>

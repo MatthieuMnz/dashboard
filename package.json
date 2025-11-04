@@ -3,7 +3,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "drizzle:generate": "drizzle-kit generate",
+    "drizzle:studio": "drizzle-kit studio",
+    "drizzle:migrate": "tsx scripts/migrate.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -39,6 +42,7 @@
     "@types/react-dom": "19.2.2",
     "@vercel/analytics": "^1.5.0",
     "autoprefixer": "^10.4.21",
+    "argon2": "^0.44.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -78,6 +82,8 @@
     "trailingComma": "none"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.16"
+    "@tailwindcss/postcss": "^4.1.16",
+    "dotenv": "^16.4.5",
+    "tsx": "^4.19.1"
   }
 }
