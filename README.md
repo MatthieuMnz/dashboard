@@ -15,7 +15,7 @@ This is a starter template using the following stack:
 - Framework - [Next.js (App Router)](https://nextjs.org)
 - Language - [TypeScript](https://www.typescriptlang.org)
 - Auth - [Auth.js](https://authjs.dev)
-- Database - [Postgres](https://vercel.com/postgres)
+- Database - [PostgreSQL](https://www.postgresql.org/) (self-hosted)
 - Deployment - [Vercel](https://vercel.com/docs/concepts/next.js/overview)
 - Styling - [Tailwind CSS](https://tailwindcss.com)
 - Components - [Shadcn UI](https://ui.shadcn.com/)
@@ -26,9 +26,13 @@ This template uses the new Next.js App Router. This includes support for enhance
 
 ## Getting Started
 
-During the deployment, Vercel will prompt you to create a new Postgres database. This will add the necessary environment variables to your project.
+Set up your PostgreSQL database connection string in the `.env` file. The `POSTGRES_URL` should be in the format:
 
-Inside the Vercel Postgres dashboard, create a table based on the schema defined in this repository.
+```
+postgresql://username:password@host:port/database
+```
+
+Create the products table in your PostgreSQL database using the schema defined below:
 
 ```
 CREATE TYPE status AS ENUM ('active', 'inactive', 'archived');
@@ -44,15 +48,9 @@ CREATE TABLE products (
 );
 ```
 
-Then, uncomment `app/api/seed.ts` and hit `http://localhost:3000/api/seed` to seed the database with products.
+Then, hit `http://localhost:3000/api/seed` to seed the database with products.
 
-Next, copy the `.env.example` file to `.env` and update the values. Follow the instructions in the `.env.example` file to set up your GitHub OAuth application.
-
-```bash
-npm i -g vercel
-vercel link
-vercel env pull
-```
+Next, copy the `.env.example` file to `.env` and update the values. Set your `POSTGRES_URL` to your self-hosted database connection string and follow the instructions in the `.env.example` file to set up your GitHub OAuth application.
 
 Finally, run the following commands to start the development server:
 
