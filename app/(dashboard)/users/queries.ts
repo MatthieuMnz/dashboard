@@ -1,6 +1,7 @@
 import 'server-only';
 
-import { db, users, type SelectUser } from '@/lib/db';
+import { db } from '@/lib/db';
+import { users, type SelectUser } from '@/lib/schema';
 import { USER_LIST_LIMIT } from '@/lib/constants';
 import { asc, count, eq } from 'drizzle-orm';
 

@@ -2,7 +2,8 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import argon2 from 'argon2';
-import { db, users } from '@/lib/db';
+import { db } from '@/lib/db';
+import { users } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
 
 const credentialsSchema = z.object({
